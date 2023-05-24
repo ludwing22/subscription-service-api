@@ -1,0 +1,77 @@
+service: subscription-service-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  httpApi:
+    cors: true
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+functions:
+  api:
+    handler: src/handler.handler
+    timeout: 30
+    events:
+      - httpApi: '*'
+  
+  processSubscription:
+    handler: src/controllers/subscription.scheduleConfirmPayments
+    events:
+      - schedule:
+          rate:
+            - cron(0 * * * *)
+  # healthCheck:
+  #   handler: src/handler.healthCheck
+  #   timeout: 30
+  #   events:
+  #     - httpApi:
+  #         path: /healthCheck
+  #         method: get
+
+  # getUsers:
+  #   handler: src/handler.users.getUsers
+  #   timeout: 30
+  #   events:
+  #     - httpApi:
+  #         path: /users
+  #         method: get
+  # getUserById:
+  #   handler: src/handler.users.getUserById
+  #   timeout: 30
+  #   events:
+  #     - httpApi:
+  #         path: /users/{_id}
+  #         method: get
+  # postUser:
+  #   handler: src/handler.users.postUser
+  #   timeout: 30
+  #   events:
+  #     - httpApi:
+  #         path: /users
+  #         method: post
+
+  # getProducts:
+  #   handler: src/handler.products.getProducts
+  #   timeout: 30
+  #   events:
+  #     - httpApi:
+  #         path: /products
+  #         method: get
+  # getProductById:
+  #   handler: src/handler.products.getProductById
+  #   timeout: 30
+  #   events:
+  #     - httpApi:
+  #         path: /products/{_id}
+  #         method: get
+  # postProduct:
+  #   handler: src/handler.products.postProduct
+  #   timeout: 30
+  #   events:
+  #     - httpApi:
+  #         path: /products
+  #         method: post
